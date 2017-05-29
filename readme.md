@@ -1,71 +1,38 @@
-# ZURB Template
+# pr-sneaking
 
-[![devDependency Status](https://david-dm.org/zurb/foundation-zurb-template/dev-status.svg)](https://david-dm.org/zurb/foundation-zurb-template#info=devDependencies)
+This repository exists to demonstrate methods of sneaking malicious code into
+Github pull requests.
 
-**Please open all issues with this template on the main [Foundation for Sites](https://github.com/zurb/foundation-sites/issues) repo.**
+While there has never been a real-world example of this kind of attack before,
+it makes sense to me as an exploit vector. If you want to compromise thousands
+of sites using XSS, all you would have to do is get one piece of malicious code
+committed to a common npm package. If your targets are using an automated
+build, you could see your exploit released the day after the npm package
+releases.
 
-This is the official ZURB Template for use with [Foundation for Sites](http://foundation.zurb.com/sites). We use this template at ZURB to deliver static code to our clients. It has a Gulp-powered build system with these features:
+So far I only have two methods of hiding malicious code in a Github PR, but I
+welcome contribution!
 
-- Handlebars HTML templates with Panini
-- Sass compilation and prefixing
-- JavaScript concatenation
-- Built-in BrowserSync server
-- For production builds:
-  - CSS compression
-  - JavaScript compression
-  - Image compression
+## Example 1: Manually add exploit into minified/compiled code
 
-## Installation
+In [pull request #1](https://github.com/mortenson/pr-sneaking/pull/1), I fix a
+legitimate bug in the source code, but after compiling the source with bower, I
+manually edit the minified JS and add the code `alert('foo')`. By using the
+Github interface, can you spot the code without using your browser's search?
 
-To use this template, your computer needs:
+This seems trivial, but if you can find a file that 
 
-- [NodeJS](https://nodejs.org/en/) (0.12 or greater)
-- [Git](https://git-scm.com/)
+## Example 2: Add NULL character and exploit to any file
 
-This template can be installed with the Foundation CLI, or downloaded and set up manually.
+Github, and Git for that matter, don't like NULL characters in source code. If
+you run `git diff` in your command line after adding a NULL character to a
+file, it doesn't output anything.
 
-### Using the CLI
+Github has a slightly different behavior, where files with NULL characters are
+displayed as "Binary file not shown", even if their file type is normal.
 
-Install the Foundation CLI with this command:
-
-```bash
-npm install foundation-cli --global
-```
-
-Use this command to set up a blank Foundation for Sites project with this template:
-
-```bash
-foundation new --framework sites --template zurb
-```
-
-The CLI will prompt you to give your project a name. The template will be downloaded into a folder with this name.
-
-Now `cd` to your project name and to start your project run 
-
-```bash
-foundation watch
-```
-
-### Manual Setup
-
-To manually set up the template, first download it with Git:
-
-```bash
-git clone https://github.com/zurb/foundation-zurb-template projectname
-```
-
-Then open the folder in your command line, and install the needed dependencies:
-
-```bash
-cd projectname
-npm install
-bower install
-```
-
-Finally, run `npm start` to run Gulp. Your finished site will be created in a folder called `dist`, viewable at this URL:
-
-```
-http://localhost:8000
-```
-
-To create compressed, production-ready assets, run `npm run build`.
+In [pull request #2](https://github.com/mortenson/pr-sneaking/pull/2), I add an
+easily-committable change to source, but manually add an exploit and a NULL
+character to a compiled file. Looking at the diff in Github, would you spot the
+issue? If so, would you still spot it if dozens of files, including binary
+files were changed?
