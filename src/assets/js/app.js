@@ -1,1 +1,2 @@
+$ = $ || jQuery;
 $(document).foundation();
