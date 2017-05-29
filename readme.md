@@ -20,7 +20,8 @@ legitimate bug in the source code, but after compiling the source with bower, I
 manually edit the minified JS and add the code `alert('foo')`. By using the
 Github interface, can you spot the code without using your browser's search?
 
-This seems trivial, but if you can find a file that 
+This seems trivial, but if you can find a file that is rarely compiled, the
+code you sneak in could live there for a long time.
 
 ## Example 2: Add NULL character and exploit to any file
 
